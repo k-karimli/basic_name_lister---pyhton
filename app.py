@@ -18,7 +18,7 @@ if st.button("Əlavə et"):
     if new_name:
         st.session_state.names.append(new_name)
         st.success(f"Ad əlavə olundu: {new_name}")
-        st.experimental_rerun()
+        st.rerun()  
     else:
         st.warning("Ad boş ola bilməz.")
 
@@ -29,7 +29,7 @@ if st.session_state.names:
     if st.button("Sil"):
         st.session_state.names.remove(remove_name)
         st.success(f"Ad silindi: {remove_name}")
-        st.experimental_rerun()
+        st.rerun()  
 
 
 if st.session_state.names:
@@ -41,6 +41,6 @@ if st.session_state.names:
             index = st.session_state.names.index(selected_name)
             st.session_state.names[index] = new_name_value
             st.success(f"'{selected_name}' → '{new_name_value}' dəyişdirildi.")
-            st.experimental_rerun()
+            st.rerun()  # ƏVVƏL: st.experimental_rerun()
         else:
             st.warning("Yeni ad boş ola bilməz.")
