@@ -1,75 +1,41 @@
+import streamlit as st
 
-import tkinter as tk
-from tkinter import messagebox, simpledialog
+if "names" not in st.session_state:
+    st.session_state.names = []
 
-# siyahı
-names = []
+st.title("📋 Adlar Siyahısı")
 
-# adlari göstərən funksiya
-def update_listbox():
-    listbox.delete(0, tk.END)
-    for i, name in enumerate(names, start=1):
-        listbox.insert(tk.END, f"{i}. {name}")
+st.subheader("Siyahı")
+for i, name in enumerate(st.session_state.names, start=1):
+    st.write(f"{i}. {name}")
 
-# ad əlavə et
-def add_name():
-    name = simpledialog.askstring("Ad əlavə et", "Əlavə etmək istədiyiniz adı yazın:")
-    if name:
-        names.append(name)
-        update_listbox()
+st.subheader("Yeni ad əlavə et")
+new_name = st.text_input("Əlavə etmək istədiyiniz adı yazın:")
+if st.button("Əlavə et") and new_name:
+    st.session_state.names.append(new_name)
+    st.experimental_rerun()
 
-# ad sil
-def remove_name():
-    selection = listbox.curselection()
-    if not selection:
-        messagebox.showwarning("Xəta", "Silinəcək adı seçin!")
-        return
-    index = selection[0]
-    del names[index]
-    update_listbox()
+st.subheader("Ad sil")
+remove_index = st.number_input(
+    "Silinməli adın sıra nömrəsini daxil edin:",
+    min_value=1,
+    max_value=len(st.session_state.names) if st.session_state.names else 1,
+    step=1,
+    format="%d"
+)
+if st.button("Sil") and st.session_state.names:
+    del st.session_state.names[remove_index - 1]
+    st.experimental_rerun()
 
-# ad dəyiş
-def change_name():
-    selection = listbox.curselection()
-    if not selection:
-        messagebox.showwarning("Xəta", "Dəyişiləcək adı seçin!")
-        return
-    index = selection[0]
-    new_name = simpledialog.askstring("Ad dəyiş", "Yeni adı daxil edin:")
-    if new_name:
-        names[index] = new_name
-        update_listbox()
-
-# əsas pəncərə
-root = tk.Tk()
-root.title("Adlar Siyahısı")
-
-frame = tk.Frame(root)
-frame.pack(pady=10)
-
-listbox = tk.Listbox(frame, width=40, height=10)
-listbox.pack(side=tk.LEFT)
-
-scrollbar = tk.Scrollbar(frame, orient="vertical")
-scrollbar.config(command=listbox.yview)
-scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-
-listbox.config(yscrollcommand=scrollbar.set)
-
-# düymələr
-btn_frame = tk.Frame(root)
-btn_frame.pack(pady=10)
-
-btn_add = tk.Button(btn_frame, text="Ad əlavə et", command=add_name)
-btn_add.grid(row=0, column=0, padx=5)
-
-btn_remove = tk.Button(btn_frame, text="Ad sil", command=remove_name)
-btn_remove.grid(row=0, column=1, padx=5)
-
-btn_change = tk.Button(btn_frame, text="Ad dəyiş", command=change_name)
-btn_change.grid(row=0, column=2, padx=5)
-
-btn_exit = tk.Button(btn_frame, text="Çıxış", command=root.quit)
-btn_exit.grid(row=0, column=3, padx=5)
-
-root.mainloop()
+st.subheader("Ad dəyiş")
+change_index = st.number_input(
+    "Dəyişiləcək adın sıra nömrəsini daxil edin:",
+    min_value=1,
+    max_value=len(st.session_state.names) if st.session_state.names else 1,
+    step=1,
+    format="%d"
+)
+new_name_change = st.text_input("Yeni adı daxil edin:")
+if st.button("Dəyiş") and new_name_change:
+    st.session_state.names[change_index - 1] = new_name_change
+    st.experimental_rerun()
